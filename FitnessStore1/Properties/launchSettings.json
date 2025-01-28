@@ -1,5 +1,4 @@
 ﻿{
-    "dotnet dev-certs https --trust"
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,

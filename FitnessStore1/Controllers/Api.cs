@@ -70,8 +70,11 @@ namespace FitnessStore.Api
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHealthChecks(); // Fix the object assignment issue
-            services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ProductValidator>());
+            services.AddHealthChecks();
+            services.AddControllers();
+            services.AddFluentValidationAutoValidation()
+                    .AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<ProductValidator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

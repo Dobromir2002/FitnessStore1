@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FitnessStore.Business\FitnessStore.Business.csproj" />
     <ProjectReference Include="..\FitnessStore.Data\FitnessStore.Data.csproj" />
+    <ProjectReference Include="..\FitnessStore.Tests\FitnessStore.Tests.csproj" />
   </ItemGroup>
 
 </Project>

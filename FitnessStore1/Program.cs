@@ -4,6 +4,8 @@ using FitnessStore.Data;
 using FluentValidation.AspNetCore;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
+using FluentValidation;
+using FitnessStore.Tests;
 
 internal class Program
 {
@@ -24,7 +26,9 @@ internal class Program
         });
 
         // Add other services to the container.
-        builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ProductValidator>());
+        builder.Services
+                .AddValidatorsFromAssemblyContaining<ProductServiceTests>();
+        builder.Services.AddFluentValidationAutoValidation();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddHealthChecks();
