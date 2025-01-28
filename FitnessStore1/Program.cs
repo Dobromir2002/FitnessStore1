@@ -6,41 +6,53 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using FluentValidation;
 using FitnessStore.Tests;
+using FitnessStore.Models.Configuration;
 
-internal class Program
+public class Program
 {
-    private static void Main(string[] args)
+    public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add MongoDB services
-        builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
-        {
-            var settings = MongoClientSettings.FromConnectionString("your_connection_string");
-            return new MongoClient(settings);
-        });
-        builder.Services.AddScoped(sp =>
-        {
-            var client = sp.GetRequiredService<IMongoClient>();
-            return client.GetDatabase("your_database_name");
-        });
+        //Add configurations
+        builder.Services.Configure<MongoDbConfiguration>(
+            builder.Configuration
+                .GetSection(nameof(MongoDbConfiguration)));
 
-        // Add other services to the container.
+        // Add services to the container.
+       
+
+        
+
+        builder.Services.AddControllers();
+
         builder.Services
-                .AddValidatorsFromAssemblyContaining<ProductServiceTests>();
+            .AddValidatorsFromAssemblyContaining<ProductServiceTests>();
         builder.Services.AddFluentValidationAutoValidation();
-        builder.Services.AddEndpointsApiExplorer();
+
         builder.Services.AddSwaggerGen();
+
         builder.Services.AddHealthChecks();
 
-        // Register the connection string
-        builder.Services.AddSingleton(sp => "your_connection_string");
+        var app = builder.Build();
 
-        // Register the repository with the connection string
-        builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        app.MapHealthChecks("/healthz");
 
-        builder.Services.AddScoped<IProductService, ProductService>();
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
-        WebApplication app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+
+        app.UseAuthorization();
+
+
+        app.MapControllers();
+
+        app.Run();
     }
 }
+
